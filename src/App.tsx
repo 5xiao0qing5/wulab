@@ -252,7 +252,7 @@ const NobelModal = ({ isOpen, onClose}: { isOpen: boolean; onClose: () => void})
             <h2 className="font-nobel-title text-xl md:text-3xl font-bold text-slate-900 mb-2 md:mb-6 border-b border-[#d4af37]/30 pb-2 md:pb-6 uppercase">Karolinska Institutet</h2>
             <p className="font-nobel-title text-slate-500 italic text-xs md:text-sm mb-2 md:mb-4 tracking-wider">has today decided to award the</p>
             <div className="py-2 px-4 md:py-3 md:px-6 border-2 border-[#d4af37]/30 inline-block bg-[#d4af37]/5 mb-2 md:mb-4">
-              <h3 className="font-nobel-title font-bold text-[#aa8400] text-sm md:text-lg uppercase tracking-widest">2030 Nobel Prize in Physiology or Medicine</h3>
+              <h3 className="font-nobel-title font-bold text-[#aa8400] text-sm md:text-lg uppercase tracking-widest">Nobel Prize in Physiology or Medicine 2030</h3>
             </div>
             <h1 className="font-nobel-script text-4xl md:text-7xl text-slate-900 py-2 md:py-4 select-none drop-shadow-sm">Wu Min</h1>
             <p className="font-nobel-title text-slate-700 text-sm md:text-lg italic max-w-sm leading-relaxed border-t border-slate-100 pt-4 md:pt-6">"for groundbreaking discoveries in smart molecular imaging systems."</p>
