@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Mail, MapPin, ExternalLink, BookOpen, Microscope, Award, ChevronRight, Activity, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Mail, Activity, Microscope, ChevronRight, X } from 'lucide-react';
 
-// --- 字体注入 (诺贝尔奖状艺术感) ---
+// --- 字体注入 ---
 const InjectFonts = () => (
   <style dangerouslySetInnerHTML={{ __html: `
     @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
@@ -31,9 +31,7 @@ const PROFILE = {
   institution: "West China Hospital, Sichuan University",
   email: "wuminscu@scu.edu.cn",
   orcidLink: "https://orcid.org/0000-0002-7733-2498",
-  // 1. 日常头像
   avatar: "http://www.754956.xyz:40078/?explorer/share/file&hash=d30fUcnL1EhvkiHKpy8g8V0H64zfwfk3twAqrCFIMZi0XJoMr_eZ6n0Nq-l7esXESzs",
-  // 2. 诺贝尔艺术照 (已经调整为更大展示面积)
   nobelPhoto: "http://www.754956.xyz:40078/?explorer/share/file&hash=5c5f19CI5PYMT9urt2QXkVxOkFKYEmRjTF1gZRf0zOElg6r03OnYtqGuHmNy52knm6Y"
 };
 
@@ -64,8 +62,6 @@ const RESEARCH_DIRS: ResearchDir[] = [
   }
 ];
 
-// --- 核心组件 ---
-
 const Header = () => (
   <header className="bg-white/80 border-b border-slate-200 sticky top-0 z-40 backdrop-blur-md">
     <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -83,7 +79,8 @@ const Header = () => (
 );
 
 const Hero = ({ onSecretTrigger }: { onSecretTrigger: () => void }) => {
-  const [clicks, setClicks] = useState(0);
+  // 修改处：删除了未使用的变量 clicks
+  const [, setClicks] = useState(0); 
   const handleAvatarClick = () => {
     setClicks(prev => {
       if (prev + 1 >= 5) { onSecretTrigger(); return 0; }
@@ -95,7 +92,6 @@ const Hero = ({ onSecretTrigger }: { onSecretTrigger: () => void }) => {
     <section id="about" className="pt-24 pb-16 bg-gradient-to-b from-slate-50 to-white">
       <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
         <div className="relative cursor-pointer" onClick={handleAvatarClick}>
-          {/* 头像：完全静止 */}
           <div className="w-64 h-64 rounded-3xl overflow-hidden border-[12px] border-white shadow-2xl bg-slate-200 relative z-10 select-none">
             <img src={PROFILE.avatar} alt={PROFILE.name} className="w-full h-full object-cover" />
           </div>
@@ -114,7 +110,6 @@ const Hero = ({ onSecretTrigger }: { onSecretTrigger: () => void }) => {
                <a href={PROFILE.orcidLink} target="_blank" rel="noreferrer" className="px-6 py-3 bg-slate-900 text-white rounded-full text-sm font-bold shadow-xl hover:bg-blue-600 transition-all">ORCID Profile</a>
                <a href="#publications" className="px-6 py-3 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-600 hover:border-blue-600 transition-all">Selected Works</a>
             </div>
-            {/* 邮箱：静止，明文展示 */}
             <div className="flex items-center justify-center md:justify-start gap-3 text-slate-500">
               <div className="p-2 bg-slate-100 rounded-full">
                 <Mail size={16} />
@@ -234,32 +229,27 @@ const NobelModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void 
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-slate-950/98 backdrop-blur-2xl animate-in fade-in duration-1000" onClick={onClose}></div>
+      <div className="absolute inset-0 bg-slate-950/98 backdrop-blur-2xl" onClick={onClose}></div>
       <div className="relative w-full max-w-5xl bg-[#fdfbf7] rounded-sm shadow-[0_50px_100px_-20px_rgba(0,0,0,1)] flex flex-col md:flex-row border-[1px] border-[#d4af37]/20 overflow-hidden animate-in zoom-in-95 duration-700">
         
         <button onClick={onClose} className="absolute top-6 right-8 z-[110] text-slate-400 hover:text-slate-900 hover:scale-110 transition-all">
           <X size={32} strokeWidth={1} />
         </button>
 
-        {/* 左页：艺术照 - 优化了边距，让图片更舒展 */}
         <div className="w-full md:w-[42%] p-2 md:p-10 bg-[#f4f1ea] border-r border-[#d4af37]/10 flex items-center justify-center relative">
           <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
-          
-          {/* 这里是修正后的相册容器：边距极窄，消除“框中框”感 */}
           <div className="w-full max-w-sm aspect-[3/4] bg-white p-1.5 shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] relative z-10">
             <img src={PROFILE.nobelPhoto} alt="Nobel Laureate" className="w-full h-full object-cover" />
           </div>
         </div>
 
-        {/* 右页：证书内容 */}
         <div className="w-full md:w-[58%] p-12 md:p-16 flex flex-col items-center text-center justify-center bg-[#fdfbf7] relative">
           <div className="absolute inset-10 border border-[#d4af37]/5 pointer-events-none"></div>
 
-          {/* 右上角奖章：固定尺寸 */}
           <div className="mb-6 w-28 h-28 relative">
              <div className="absolute inset-0 rounded-full bg-[#d4af37]/20 blur-2xl"></div>
              <img 
-               src="http://www.754956.xyz:40078/?explorer/share/file&hash=f71e_SW9jmPW_GbEl1nRdQ0fNyYwdSZm3Ij7czjKvKDhuctv2adbESYmsGiIrx04-QE" 
+               src="https://www.nobelprize.org/images/nobel_medal_physics_chemistry.png" 
                alt="Nobel Medal" 
                className="w-full h-full object-contain relative z-10 drop-shadow-xl"
              />
@@ -272,12 +262,10 @@ const NobelModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void 
             <div className="py-3 px-6 border-2 border-[#d4af37]/30 inline-block bg-[#d4af37]/5 mb-2">
               <h3 className="font-nobel-title font-bold text-[#aa8400] text-lg uppercase tracking-[0.2em]">2030 Nobel Prize in Physiology or Medicine</h3>
             </div>
-            
             <h1 className="font-nobel-script text-7xl text-slate-900 py-4 select-none drop-shadow-sm">
               Min Wu
             </h1>
-            
-            <p className="font-nobel-title text-slate-700 text-lg italic max-w-sm leading-relaxed border-t border-slate-100 pt-6">
+            <p className="font-nobel-title text-slate-700 text-lg italic max-w-sm leading-relaxed border-t border-slate-100 pt-6 text-center">
               "for groundbreaking discoveries in smart molecular imaging and precision theranostic systems."
             </p>
           </div>
