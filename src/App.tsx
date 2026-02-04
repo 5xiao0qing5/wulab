@@ -176,7 +176,14 @@ const Publications = () => {
                    2. 将 text-[10px] 改为 text-xs (调大字体)
                    3. 添加 shrink-0 (防止被挤压)
                 */}
-                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full shrink-0">{pub.year}</span>
+                <span
+  className="shrink-0 inline-flex items-center justify-center
+             text-xs font-bold text-blue-600 bg-blue-50
+             px-3 h-7 min-w-[64px] rounded-full leading-none"
+>
+  {String(pub.year)}
+</span>
+
                 <div className="flex-1 min-w-0">
                   <h4 className="text-lg font-bold text-slate-800 mb-2 leading-tight break-words">
                     {pub.link ? (
