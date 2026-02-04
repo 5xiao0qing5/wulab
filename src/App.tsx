@@ -154,7 +154,6 @@ const Research = ({ researchDirs }: { researchDirs: ResearchDir[] }) => {
 const Publications = () => {
   const [pubs, setPubs] = useState<Publication[]>([]);
   useEffect(() => {
-    // 关键点：动态加载爬虫生成的 JSON
     fetch('./publications.json')
       .then(res => res.json())
       .then(data => setPubs(data))
@@ -172,7 +171,12 @@ const Publications = () => {
           {pubs.map((pub, idx) => (
             <div key={idx} className="bg-white p-8 rounded-3xl border border-slate-200 hover:border-blue-400 transition-all shadow-sm">
               <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
-                <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full h-fit tracking-tighter">{pub.year}</span>
+                {/* Bug 1 修复: 
+                   1. 移除 tracking-tighter (防止缩成一团) 
+                   2. 将 text-[10px] 改为 text-xs (调大字体)
+                   3. 添加 shrink-0 (防止被挤压)
+                */}
+                <span className="text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full shrink-0">{pub.year}</span>
                 <div className="flex-1 min-w-0">
                   <h4 className="text-lg font-bold text-slate-800 mb-2 leading-tight break-words">
                     {pub.link ? (
@@ -212,36 +216,50 @@ const NobelModal = ({ isOpen, onClose, profile }: { isOpen: boolean; onClose: ()
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-950/98 backdrop-blur-2xl animate-in fade-in duration-700" onClick={onClose}></div>
-      <div className="relative w-full max-w-5xl bg-[#fdfbf7] flex flex-col md:flex-row border border-[#d4af37]/20 shadow-2xl overflow-hidden animate-in zoom-in duration-700">
+      {/* Bug 2 修复:
+         1. 移除 flex-col，强制使用 flex-row (在所有屏幕尺寸下都横排)
+      */}
+      <div className="relative w-full max-w-5xl bg-[#fdfbf7] flex flex-row border border-[#d4af37]/20 shadow-2xl overflow-hidden animate-in zoom-in duration-700">
         <button onClick={onClose} className="absolute top-6 right-8 z-[110] text-slate-400 hover:text-slate-900 transition-all"><X size={32} /></button>
         
-        {/* 左侧大图：优化展示面积 */}
-        <div className="w-full md:w-[42%] p-2 md:p-10 bg-[#f4f1ea] border-r border-[#d4af37]/10 flex items-center justify-center relative">
+        {/* 左侧大图修改: 
+           1. 宽度固定为 40% (w-[40%])
+           2. 添加 shrink-0 防止被压缩
+        */}
+        <div className="w-[40%] shrink-0 p-2 md:p-10 bg-[#f4f1ea] border-r border-[#d4af37]/10 flex items-center justify-center relative">
           <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
           <div className="w-full max-w-sm aspect-[3/4] bg-white p-1.5 shadow-2xl relative z-10">
             <img src={nobelPhotoImg} alt="Nobel Laureate" className="w-full h-full object-cover" />
           </div>
         </div>
 
-        {/* 右侧文本：注入艺术字 */}
-        <div className="w-full md:w-[58%] p-12 md:p-16 flex flex-col items-center text-center justify-center bg-[#fdfbf7]">
-          <div className="mb-6 w-28 h-28 relative">
+        {/* 右侧文本修改: 
+           1. 宽度固定为 60% (w-[60%])
+           2. 移动端内边距减小为 p-4 (防止内容撑爆)，桌面端保持 p-16
+        */}
+        <div className="w-[60%] p-4 md:p-16 flex flex-col items-center text-center justify-center bg-[#fdfbf7]">
+          <div className="mb-6 w-28 h-28 relative hidden md:block"> {/* 移动端隐藏奖章图片以节省空间，或者保留看您需求，这里暂时保留 */}
              <div className="absolute inset-0 rounded-full bg-[#d4af37]/20 blur-2xl"></div>
              <img src={medalImg} alt="Medal" className="w-full h-full object-contain relative z-10 drop-shadow-xl" />
           </div>
-          <div className="space-y-5">
-            <p className="font-nobel-title text-slate-400 uppercase tracking-[0.4em] text-[10px]">The Nobel Assembly at</p>
-            <h2 className="font-nobel-title text-3xl font-bold text-slate-900 mb-6 border-b border-[#d4af37]/30 pb-6 uppercase">Karolinska Institutet</h2>
-            <p className="font-nobel-title text-slate-500 italic text-sm mb-4 tracking-wider">has today decided to award the</p>
-            <div className="py-3 px-6 border-2 border-[#d4af37]/30 inline-block bg-[#d4af37]/5 mb-4">
-              <h3 className="font-nobel-title font-bold text-[#aa8400] text-lg uppercase tracking-widest">2030 Nobel Prize in Medicine</h3>
-            </div>
-            <h1 className="font-nobel-script text-7xl text-slate-900 py-4 select-none drop-shadow-sm">{profile.name}</h1>
-            <p className="font-nobel-title text-slate-700 text-lg italic max-w-sm leading-relaxed border-t border-slate-100 pt-6">"for groundbreaking discoveries in smart molecular imaging systems."</p>
+          {/* 移动端显示的简单版奖章 (可选，如果不隐藏上面的话) */}
+          <div className="md:hidden mb-2 w-16 h-16 relative">
+             <img src={medalImg} alt="Medal" className="w-full h-full object-contain" />
           </div>
-          <div className="mt-12 w-full flex justify-between px-6 font-nobel-title">
-            <div className="text-left"><p className="text-[9px] text-slate-400 uppercase mb-1">Stockholm</p><p className="text-xs font-bold text-slate-800">Dec 10, 2030</p></div>
-            <div className="text-right"><p className="text-[9px] text-slate-400 uppercase mb-1">Secretary General</p><p className="font-nobel-script text-xl text-slate-900 h-8">Thomas Perlmann</p></div>
+
+          <div className="space-y-3 md:space-y-5">
+            <p className="font-nobel-title text-slate-400 uppercase tracking-[0.4em] text-[8px] md:text-[10px]">The Nobel Assembly at</p>
+            <h2 className="font-nobel-title text-xl md:text-3xl font-bold text-slate-900 mb-2 md:mb-6 border-b border-[#d4af37]/30 pb-2 md:pb-6 uppercase">Karolinska Institutet</h2>
+            <p className="font-nobel-title text-slate-500 italic text-xs md:text-sm mb-2 md:mb-4 tracking-wider">has today decided to award the</p>
+            <div className="py-2 px-4 md:py-3 md:px-6 border-2 border-[#d4af37]/30 inline-block bg-[#d4af37]/5 mb-2 md:mb-4">
+              <h3 className="font-nobel-title font-bold text-[#aa8400] text-sm md:text-lg uppercase tracking-widest">2030 Nobel Prize in Medicine</h3>
+            </div>
+            <h1 className="font-nobel-script text-4xl md:text-7xl text-slate-900 py-2 md:py-4 select-none drop-shadow-sm">{profile.name}</h1>
+            <p className="font-nobel-title text-slate-700 text-sm md:text-lg italic max-w-sm leading-relaxed border-t border-slate-100 pt-4 md:pt-6">"for groundbreaking discoveries in smart molecular imaging systems."</p>
+          </div>
+          <div className="mt-8 md:mt-12 w-full flex justify-between px-2 md:px-6 font-nobel-title">
+            <div className="text-left"><p className="text-[8px] md:text-[9px] text-slate-400 uppercase mb-1">Stockholm</p><p className="text-[10px] md:text-xs font-bold text-slate-800">Dec 10, 2030</p></div>
+            <div className="text-right"><p className="text-[8px] md:text-[9px] text-slate-400 uppercase mb-1">Secretary General</p><p className="font-nobel-script text-lg md:text-xl text-slate-900 h-8">Thomas Perlmann</p></div>
           </div>
         </div>
       </div>
