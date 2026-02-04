@@ -15,11 +15,25 @@ interface Publication {
   link?: string;
 }
 
+interface Profile {
+  name: string;
+  title: string;
+  department: string;
+  institution: string;
+  email: string;
+  orcidLink: string;
+}
+
 interface ResearchDir {
   id: string;
   title: string;
   description: string;
   details: string[];
+}
+
+interface SiteConfig {
+  profile: Profile;
+  researchDirs: ResearchDir[];
 }
 
 // --- 字体注入 (为诺贝尔奖状添加艺术感) ---
@@ -30,43 +44,6 @@ const InjectFonts = () => (
     .font-nobel-script { font-family: 'Dancing Script', cursive; }
   `}} />
 );
-
-// --- 配置文件 ---
-const PROFILE = {
-  name: "Min Wu, Ph.D.",
-  title: "Professor & Ph.D. Supervisor",
-  department: "Department of Radiology",
-  institution: "West China Hospital, Sichuan University",
-  email: "wuminscu@scu.edu.cn",
-  orcidLink: "https://orcid.org/0000-0002-7733-2498"
-};
-
-const RESEARCH_DIRS: ResearchDir[] = [
-  {
-    id: "m-imaging",
-    title: "Molecular Imaging",
-    description: "Multi-modality imaging of biological processes at the molecular level.",
-    details: ["MRI/CT Contrast Agents", "Optical Imaging in NIR-II window", "Micro-PET/CT Evaluation"]
-  },
-  {
-    id: "smart-nanoprobe",
-    title: "Smart Nanoprobes",
-    description: "Responsive nanoplatforms for precise tumor targeting and sensing.",
-    details: ["Stimuli-responsive Release", "Targeted Delivery (Glioblastoma)", "Signal Amplification Strategies"]
-  },
-  {
-    id: "hydrogels",
-    title: "Theranostic Hydrogels",
-    description: "Injectable and biodegradable hydrogels for local therapy and monitoring.",
-    details: ["Post-operative Recurrence Prevention", "Controlled Drug Delivery", "Tissue Engineering Matrix"]
-  },
-  {
-    id: "brain-disorders",
-    title: "CNS Diseases Diagnosis",
-    description: "Advanced diagnostic strategies for Glioblastoma and Alzheimer's disease.",
-    details: ["BBB Penetration", "Aβ Plaque Visualization", "Neuroinflammation Imaging"]
-  }
-];
 
 // --- 核心子组件 ---
 
@@ -86,7 +63,7 @@ const Header = () => (
   </header>
 );
 
-const Hero = ({ onSecretTrigger }: { onSecretTrigger: () => void }) => {
+const Hero = ({ profile, onSecretTrigger }: { profile: Profile; onSecretTrigger: () => void }) => {
   const [, setClicks] = useState(0); 
   const handleAvatarClick = () => {
     setClicks(prev => {
@@ -100,26 +77,26 @@ const Hero = ({ onSecretTrigger }: { onSecretTrigger: () => void }) => {
       <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
         <div className="relative cursor-pointer" onClick={handleAvatarClick}>
           <div className="w-64 h-64 rounded-3xl overflow-hidden border-[12px] border-white shadow-2xl bg-slate-100 select-none">
-            <img src={avatarImg} alt={PROFILE.name} className="w-full h-full object-cover" />
+            <img src={avatarImg} alt={profile.name} className="w-full h-full object-cover" />
           </div>
           <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -z-0"></div>
         </div>
         
         <div className="flex-1 text-center md:text-left">
           <div className="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-[0.3em] rounded mb-6">Principal Investigator</div>
-          <h1 className="text-5xl font-black text-slate-900 mb-4 tracking-tight">{PROFILE.name}</h1>
+          <h1 className="text-5xl font-black text-slate-900 mb-4 tracking-tight">{profile.name}</h1>
           <p className="text-xl text-slate-500 font-medium mb-8 leading-relaxed">
-            {PROFILE.title} at <span className="text-slate-800">{PROFILE.institution}</span>
+            {profile.title} at <span className="text-slate-800">{profile.institution}</span>
           </p>
           
           <div className="flex flex-col gap-6">
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
-               <a href={PROFILE.orcidLink} target="_blank" rel="noreferrer" className="px-6 py-3 bg-slate-900 text-white rounded-full text-sm font-bold shadow-xl hover:bg-blue-600 transition-all">ORCID Profile</a>
+               <a href={profile.orcidLink} target="_blank" rel="noreferrer" className="px-6 py-3 bg-slate-900 text-white rounded-full text-sm font-bold shadow-xl hover:bg-blue-600 transition-all">ORCID Profile</a>
                <a href="#publications" className="px-6 py-3 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-600 hover:border-blue-600 transition-all">Selected Works</a>
             </div>
             <div className="flex items-center justify-center md:justify-start gap-3 text-slate-500">
               <div className="p-2 bg-slate-100 rounded-full"><Mail size={16} /></div>
-              <span className="font-mono text-sm tracking-tighter font-bold border-b border-blue-200">{PROFILE.email}</span>
+              <span className="font-mono text-sm tracking-tighter font-bold border-b border-blue-200">{profile.email}</span>
             </div>
           </div>
         </div>
@@ -151,14 +128,14 @@ const ResearchModal = ({ data, onClose }: { data: ResearchDir | null, onClose: (
   );
 };
 
-const Research = () => {
+const Research = ({ researchDirs }: { researchDirs: ResearchDir[] }) => {
   const [selected, setSelected] = useState<ResearchDir | null>(null);
   return (
     <section id="research" className="py-32 bg-white">
       <div className="max-w-5xl mx-auto px-6">
         <h2 className="text-4xl font-black text-slate-900 tracking-tight mb-12">Research Directions</h2>
         <div className="grid md:grid-cols-2 gap-8">
-          {RESEARCH_DIRS.map((item) => (
+          {researchDirs.map((item) => (
             <div key={item.id} onClick={() => setSelected(item)} className="p-10 rounded-3xl border border-slate-100 bg-slate-50 hover:bg-white transition-all cursor-pointer shadow-sm hover:shadow-2xl">
               <div className="flex justify-between items-start mb-6">
                 <h3 className="text-xl font-black text-slate-800 uppercase tracking-tight group-hover:text-blue-600">{item.title}</h3>
@@ -230,7 +207,7 @@ const Publications = () => {
   );
 };
 
-const NobelModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) => {
+const NobelModal = ({ isOpen, onClose, profile }: { isOpen: boolean; onClose: () => void; profile: Profile }) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -259,7 +236,7 @@ const NobelModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void 
             <div className="py-3 px-6 border-2 border-[#d4af37]/30 inline-block bg-[#d4af37]/5 mb-4">
               <h3 className="font-nobel-title font-bold text-[#aa8400] text-lg uppercase tracking-widest">2030 Nobel Prize in Medicine</h3>
             </div>
-            <h1 className="font-nobel-script text-7xl text-slate-900 py-4 select-none drop-shadow-sm">{PROFILE.name}</h1>
+            <h1 className="font-nobel-script text-7xl text-slate-900 py-4 select-none drop-shadow-sm">{profile.name}</h1>
             <p className="font-nobel-title text-slate-700 text-lg italic max-w-sm leading-relaxed border-t border-slate-100 pt-6">"for groundbreaking discoveries in smart molecular imaging systems."</p>
           </div>
           <div className="mt-12 w-full flex justify-between px-6 font-nobel-title">
@@ -273,20 +250,43 @@ const NobelModal = ({ isOpen, onClose }: { isOpen: boolean, onClose: () => void 
 };
 
 export default function App() {
+  const [config, setConfig] = useState<SiteConfig | null>(null);
   const [show, setShow] = useState(false);
+
+  useEffect(() => {
+    fetch('./site_config.json')
+      .then(res => res.json())
+      .then(data => setConfig(data))
+      .catch(() => setConfig(null));
+  }, []);
+
+  if (!config) {
+    return (
+      <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-blue-600 selection:text-white antialiased">
+        <InjectFonts />
+        <Header />
+        <section className="pt-24 pb-16 bg-gradient-to-b from-slate-50 to-white">
+          <div className="max-w-5xl mx-auto px-6">
+            <p className="text-slate-500">Loading site content...</p>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-blue-600 selection:text-white antialiased">
       <InjectFonts />
       <Header />
-      <Hero onSecretTrigger={() => setShow(true)} />
-      <Research />
+      <Hero profile={config.profile} onSecretTrigger={() => setShow(true)} />
+      <Research researchDirs={config.researchDirs} />
       <Publications />
       <footer className="py-20 bg-slate-950 text-slate-700 text-[10px] text-center uppercase tracking-[0.4em] font-black">
         <div className="max-w-5xl mx-auto px-6 border-t border-white/5 pt-16">
            &copy; {new Date().getFullYear()} Min Wu Laboratory / West China Hospital
         </div>
       </footer>
-      <NobelModal isOpen={show} onClose={() => setShow(false)} />
+      <NobelModal isOpen={show} onClose={() => setShow(false)} profile={config.profile} />
     </div>
   );
 }

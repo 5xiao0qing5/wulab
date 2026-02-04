@@ -1,0 +1,52 @@
+{
+  "profile": {
+    "name": "Min Wu, Ph.D.",
+    "title": "Professor & Ph.D. Supervisor",
+    "department": "Department of Radiology",
+    "institution": "West China Hospital, Sichuan University",
+    "email": "wuminscu@scu.edu.cn",
+    "orcidLink": "https://orcid.org/0000-0002-7733-2498"
+  },
+  "researchDirs": [
+    {
+      "id": "m-imaging",
+      "title": "Molecular Imaging",
+      "description": "Multi-modality imaging of biological processes at the molecular level.",
+      "details": [
+        "MRI/CT Contrast Agents",
+        "Optical Imaging in NIR-II window",
+        "Micro-PET/CT Evaluation"
+      ]
+    },
+    {
+      "id": "smart-nanoprobe",
+      "title": "Smart Nanoprobes",
+      "description": "Responsive nanoplatforms for precise tumor targeting and sensing.",
+      "details": [
+        "Stimuli-responsive Release",
+        "Targeted Delivery (Glioblastoma)",
+        "Signal Amplification Strategies"
+      ]
+    },
+    {
+      "id": "hydrogels",
+      "title": "Theranostic Hydrogels",
+      "description": "Injectable and biodegradable hydrogels for local therapy and monitoring.",
+      "details": [
+        "Post-operative Recurrence Prevention",
+        "Controlled Drug Delivery",
+        "Tissue Engineering Matrix"
+      ]
+    },
+    {
+      "id": "brain-disorders",
+      "title": "CNS Diseases Diagnosis",
+      "description": "Advanced diagnostic strategies for Glioblastoma and Alzheimer's disease.",
+      "details": [
+        "BBB Penetration",
+        "Aβ Plaque Visualization",
+        "Neuroinflammation Imaging"
+      ]
+    }
+  ]
+}
