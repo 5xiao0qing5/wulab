@@ -194,8 +194,8 @@ const Publications = () => {
         <div className="grid gap-6">
           {pubs.map((pub, idx) => (
             <div key={idx} className="bg-white p-8 rounded-3xl border border-slate-200 hover:border-blue-400 transition-all shadow-sm">
-              <div className="flex flex-wrap items-start gap-4 sm:flex-nowrap sm:gap-6">
-                <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full h-fit tracking-tighter shrink-0 whitespace-nowrap">{pub.year}</span>
+              <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
+                <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full h-fit tracking-tighter">{pub.year}</span>
                 <div className="flex-1 min-w-0">
                   <h4 className="text-lg font-bold text-slate-800 mb-2 leading-tight break-words">
                     {pub.link ? (
