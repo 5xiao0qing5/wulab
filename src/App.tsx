@@ -211,7 +211,7 @@ const Publications = () => {
   );
 };
 
-const NobelModal = ({ isOpen, onClose, profile }: { isOpen: boolean; onClose: () => void; profile: Profile }) => {
+const NobelModal = ({ isOpen, onClose}: { isOpen: boolean; onClose: () => void}) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
