@@ -21,7 +21,8 @@ def fetch_orcid_works(orcid_id="0000-0002-7733-2498"):
             for eid in work.get('external-ids', {}).get('external-id', []):
                 if eid.get('external-id-type') == 'doi':
                     doi = eid.get('external-id-value')
-            pubs.append({"year": year, "title": title, "journal": journal, "doi": doi})
+            link = f"https://doi.org/{doi}" if doi else ""
+            pubs.append({"year": year, "title": title, "journal": journal, "doi": doi, "link": link})
         return pubs
     except Exception as e:
         print(f"Error: {e}")

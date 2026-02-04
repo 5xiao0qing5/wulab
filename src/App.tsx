@@ -12,6 +12,7 @@ interface Publication {
   title: string;
   journal: string;
   doi: string;
+  link?: string;
 }
 
 interface ResearchDir {
@@ -186,15 +187,38 @@ const Publications = () => {
   return (
     <section id="publications" className="py-32 bg-slate-50">
       <div className="max-w-5xl mx-auto px-6">
-        <h2 className="text-4xl font-black text-slate-900 tracking-tight mb-12">Latest Publications</h2>
+        <div className="flex flex-col gap-3 mb-12">
+          <h2 className="text-4xl font-black text-slate-900 tracking-tight">Latest Publications</h2>
+          <p className="text-sm text-slate-500">Updated once per month. Each paper links to its DOI record.</p>
+        </div>
         <div className="grid gap-6">
           {pubs.map((pub, idx) => (
-            <div key={idx} className="bg-white p-8 rounded-3xl border border-slate-200 hover:border-blue-400 transition-all shadow-sm">
-              <div className="flex gap-6">
-                <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full h-fit tracking-tighter">{pub.year}</span>
-                <div className="flex-1">
-                  <h4 className="text-lg font-bold text-slate-800 mb-2 leading-tight">{pub.title}</h4>
-                  <p className="text-sm text-slate-400 font-bold uppercase tracking-widest italic">{pub.journal} {pub.doi && `(DOI: ${pub.doi})`}</p>
+            <div key={idx} className="bg-white p-8 rounded-3xl border border-slate-200 hover:border-blue-400 transition-all shadow-sm overflow-hidden">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+                <span className="text-[10px] font-black text-blue-600 bg-blue-50 px-3 py-1 rounded-full h-fit tracking-tighter shrink-0">{pub.year}</span>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-lg font-bold text-slate-800 mb-2 leading-tight break-words">
+                    {pub.link ? (
+                      <a href={pub.link} target="_blank" rel="noreferrer" className="hover:text-blue-600 transition-colors">
+                        {pub.title}
+                      </a>
+                    ) : (
+                      pub.title
+                    )}
+                  </h4>
+                  <p className="text-sm text-slate-400 font-bold uppercase tracking-normal sm:tracking-widest italic break-words">
+                    {pub.journal}
+                    {pub.doi && (
+                      <>
+                        {' '}
+                        (DOI:{' '}
+                        <a href={pub.link ?? `https://doi.org/${pub.doi}`} target="_blank" rel="noreferrer" className="hover:text-blue-600 transition-colors">
+                          {pub.doi}
+                        </a>
+                        )
+                      </>
+                    )}
+                  </p>
                 </div>
               </div>
             </div>
