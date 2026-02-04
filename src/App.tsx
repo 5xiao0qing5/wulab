@@ -304,7 +304,7 @@ export default function App() {
            &copy; {new Date().getFullYear()} Min Wu Laboratory / West China Hospital
         </div>
       </footer>
-      <NobelModal isOpen={show} onClose={() => setShow(false)} profile={config.profile} />
+      <NobelModal isOpen={show} onClose={() => setShow(false)} />
     </div>
   );
 }
