@@ -3,8 +3,10 @@ import { Mail, Activity, Microscope, ChevronRight, X } from 'lucide-react';
 
 // --- 导入本地静态资源 ---
 import avatarImg from './assets/avatar.jpg';
-import nobelPhotoImg from './assets/nobel-photo.jpg';
-import medalImg from './assets/medal.png';
+
+// [彩蛋屏蔽] 1. 静态资源引入
+// import nobelPhotoImg from './assets/nobel-photo.jpg';
+// import medalImg from './assets/medal.png';
 
 // --- 类型声明 ---
 interface Publication {
@@ -37,6 +39,8 @@ interface SiteConfig {
 }
 
 // --- 字体注入 (为诺贝尔奖状添加艺术感) ---
+// [彩蛋屏蔽] 2. 字体注入组件
+/*
 const InjectFonts = () => (
   <style dangerouslySetInnerHTML={{ __html: `
     @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
@@ -44,6 +48,7 @@ const InjectFonts = () => (
     .font-nobel-script { font-family: 'Dancing Script', cursive; }
   `}} />
 );
+*/
 
 // --- 核心子组件 ---
 
@@ -63,36 +68,43 @@ const Header = () => (
   </header>
 );
 
-const Hero = ({ profile, onSecretTrigger }: { profile: Profile; onSecretTrigger: () => void }) => {
-  const [, setClicks] = useState(0); 
+// [彩蛋屏蔽] 3. Hero组件接口修改 (注释掉 onSecretTrigger)
+const Hero = ({ profile /*, onSecretTrigger */ }: { profile: Profile; /* onSecretTrigger: () => void */ }) => {
+  
+  // [彩蛋屏蔽] 4. 计数器状态与点击逻辑
+  /*
+  const [, setClicks] = useState(0);
+
   const handleAvatarClick = () => {
     setClicks(prev => {
       if (prev + 1 >= 5) { onSecretTrigger(); return 0; }
       return prev + 1;
     });
   };
+  */
 
   return (
     <section id="about" className="pt-24 pb-16 bg-gradient-to-b from-slate-50 to-white">
       <div className="max-w-5xl mx-auto px-6 flex flex-col md:flex-row items-center gap-16">
-        <div className="relative cursor-pointer" onClick={handleAvatarClick}>
+        {/* [彩蛋屏蔽] 5. 移除 onClick 事件 */}
+        <div className="relative cursor-pointer" /* onClick={handleAvatarClick} */>
           <div className="w-64 h-64 rounded-3xl overflow-hidden border-[12px] border-white shadow-2xl bg-slate-100 select-none">
             <img src={avatarImg} alt={profile.name} className="w-full h-full object-cover" />
           </div>
           <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -z-0"></div>
         </div>
-        
+
         <div className="flex-1 text-center md:text-left">
           <div className="inline-flex items-center px-2 py-1 bg-blue-50 text-blue-600 text-[10px] font-black uppercase tracking-[0.3em] rounded mb-6">Principal Investigator</div>
           <h1 className="text-5xl font-black text-slate-900 mb-4 tracking-tight">{profile.name}</h1>
           <p className="text-xl text-slate-500 font-medium mb-8 leading-relaxed">
             {profile.title} at <span className="text-slate-800">{profile.institution}</span>
           </p>
-          
+
           <div className="flex flex-col gap-6">
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
-               <a href={profile.orcidLink} target="_blank" rel="noreferrer" className="px-6 py-3 bg-slate-900 text-white rounded-full text-sm font-bold shadow-xl hover:bg-blue-600 transition-all">ORCID Profile</a>
-               <a href="#publications" className="px-6 py-3 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-600 hover:border-blue-600 transition-all">Selected Works</a>
+              <a href={profile.orcidLink} target="_blank" rel="noreferrer" className="px-6 py-3 bg-slate-900 text-white rounded-full text-sm font-bold shadow-xl hover:bg-blue-600 transition-all">ORCID Profile</a>
+              <a href="#publications" className="px-6 py-3 bg-white border border-slate-200 rounded-full text-sm font-bold text-slate-600 hover:border-blue-600 transition-all">Selected Works</a>
             </div>
             <div className="flex items-center justify-center md:justify-start gap-3 text-slate-500">
               <div className="p-2 bg-slate-100 rounded-full"><Mail size={16} /></div>
@@ -171,19 +183,9 @@ const Publications = () => {
           {pubs.map((pub, idx) => (
             <div key={idx} className="bg-white p-8 rounded-3xl border border-slate-200 hover:border-blue-400 transition-all shadow-sm">
               <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
-                {/* Bug 1 修复: 
-                   1. 移除 tracking-tighter (防止缩成一团) 
-                   2. 将 text-[10px] 改为 text-xs (调大字体)
-                   3. 添加 shrink-0 (防止被挤压)
-                */}
-                <span
-  className="shrink-0 inline-flex items-center justify-center
-             text-xs font-bold text-blue-600 bg-blue-50
-             px-3 h-7 min-w-[64px] rounded-full leading-none"
->
-  {String(pub.year)}
-</span>
-
+                <span className="shrink-0 inline-flex items-center justify-center text-xs font-bold text-blue-600 bg-blue-50 px-3 h-7 min-w-[64px] rounded-full leading-none" >
+                  {String(pub.year)}
+                </span>
                 <div className="flex-1 min-w-0">
                   <h4 className="text-lg font-bold text-slate-800 mb-2 leading-tight break-words">
                     {pub.link ? (
@@ -198,12 +200,10 @@ const Publications = () => {
                     {pub.journal}
                     {pub.doi && (
                       <>
-                        {' '}
-                        (DOI:{' '}
+                        {' '}(DOI:{' '}
                         <a href={pub.link ?? `https://doi.org/${pub.doi}`} target="_blank" rel="noreferrer" className="hover:text-blue-600 transition-colors break-all">
                           {pub.doi}
-                        </a>
-                        )
+                        </a>)
                       </>
                     )}
                   </p>
@@ -218,21 +218,17 @@ const Publications = () => {
   );
 };
 
+// [彩蛋屏蔽] 6. 诺贝尔奖模态框组件
+/*
 const NobelModal = ({ isOpen, onClose}: { isOpen: boolean; onClose: () => void}) => {
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-slate-950/98 backdrop-blur-2xl animate-in fade-in duration-700" onClick={onClose}></div>
-      {/* Bug 2 修复:
-         1. 移除 flex-col，强制使用 flex-row (在所有屏幕尺寸下都横排)
-      */}
+      
       <div className="relative w-full max-w-5xl bg-[#fdfbf7] flex flex-row border border-[#d4af37]/20 shadow-2xl overflow-hidden animate-in zoom-in duration-700">
         <button onClick={onClose} className="absolute top-6 right-8 z-[110] text-slate-400 hover:text-slate-900 transition-all"><X size={32} /></button>
         
-        {/* 左侧大图修改: 
-           1. 宽度固定为 40% (w-[40%])
-           2. 添加 shrink-0 防止被压缩
-        */}
         <div className="w-[40%] shrink-0 p-2 md:p-10 bg-[#f4f1ea] border-r border-[#d4af37]/10 flex items-center justify-center relative">
           <div className="absolute inset-0 opacity-5 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')]"></div>
           <div className="w-full max-w-sm aspect-[3/4] bg-white p-1.5 shadow-2xl relative z-10">
@@ -240,21 +236,17 @@ const NobelModal = ({ isOpen, onClose}: { isOpen: boolean; onClose: () => void})
           </div>
         </div>
 
-        {/* 右侧文本修改: 
-           1. 宽度固定为 60% (w-[60%])
-           2. 移动端内边距减小为 p-4 (防止内容撑爆)，桌面端保持 p-16
-        */}
         <div className="w-[60%] p-4 md:p-16 flex flex-col items-center text-center justify-center bg-[#fdfbf7]">
-          <div className="mb-6 w-28 h-28 relative hidden md:block"> {/* 移动端隐藏奖章图片以节省空间，或者保留看您需求，这里暂时保留 */}
+          <div className="mb-6 w-28 h-28 relative hidden md:block">
              <div className="absolute inset-0 rounded-full bg-[#d4af37]/20 blur-2xl"></div>
              <img src={medalImg} alt="Medal" className="w-full h-full object-contain relative z-10 drop-shadow-xl" />
           </div>
-          {/* 移动端显示的简单版奖章 (可选，如果不隐藏上面的话) */}
+          
           <div className="md:hidden mb-2 w-16 h-16 relative">
              <img src={medalImg} alt="Medal" className="w-full h-full object-contain" />
           </div>
 
-          <div className="space-y-3 md:space-y-5">
+           <div className="space-y-3 md:space-y-5">
             <p className="font-nobel-title text-slate-400 uppercase tracking-[0.4em] text-[8px] md:text-[10px]">The Nobel Assembly at</p>
             <h2 className="font-nobel-title text-xl md:text-3xl font-bold text-slate-900 mb-2 md:mb-6 border-b border-[#d4af37]/30 pb-2 md:pb-6 uppercase">Karolinska Institutet</h2>
             <p className="font-nobel-title text-slate-500 italic text-xs md:text-sm mb-2 md:mb-4 tracking-wider">has today decided to award the</p>
@@ -264,6 +256,7 @@ const NobelModal = ({ isOpen, onClose}: { isOpen: boolean; onClose: () => void})
             <h1 className="font-nobel-script text-4xl md:text-7xl text-slate-900 py-2 md:py-4 select-none drop-shadow-sm">Wu Min</h1>
             <p className="font-nobel-title text-slate-700 text-sm md:text-lg italic max-w-sm leading-relaxed border-t border-slate-100 pt-4 md:pt-6">"for groundbreaking discoveries in smart molecular imaging systems."</p>
           </div>
+
           <div className="mt-8 md:mt-12 w-full flex justify-between px-2 md:px-6 font-nobel-title">
             <div className="text-left"><p className="text-[8px] md:text-[9px] text-slate-400 uppercase mb-1">Stockholm</p><p className="text-[10px] md:text-xs font-bold text-slate-800">Dec 10, 2030</p></div>
             <div className="text-right"><p className="text-[8px] md:text-[9px] text-slate-400 uppercase mb-1">Secretary General</p><p className="font-nobel-script text-lg md:text-xl text-slate-900 h-8">Thomas Perlmann</p></div>
@@ -273,10 +266,13 @@ const NobelModal = ({ isOpen, onClose}: { isOpen: boolean; onClose: () => void})
     </div>
   );
 };
+*/
 
 export default function App() {
   const [config, setConfig] = useState<SiteConfig | null>(null);
-  const [show, setShow] = useState(false);
+  
+  // [彩蛋屏蔽] 7. 移除 App 层面的彩蛋状态
+  // const [show, setShow] = useState(false);
 
   useEffect(() => {
     fetch('./site_config.json')
@@ -288,7 +284,7 @@ export default function App() {
   if (!config) {
     return (
       <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-blue-600 selection:text-white antialiased">
-        <InjectFonts />
+        {/* <InjectFonts /> */}
         <Header />
         <section className="pt-24 pb-16 bg-gradient-to-b from-slate-50 to-white">
           <div className="max-w-5xl mx-auto px-6">
@@ -301,17 +297,27 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-blue-600 selection:text-white antialiased">
-      <InjectFonts />
+      {/* [彩蛋屏蔽] 8. 移除字体注入和 Props 传递 */}
+      {/* <InjectFonts /> */}
+      
       <Header />
-      <Hero profile={config.profile} onSecretTrigger={() => setShow(true)} />
+      
+      <Hero 
+        profile={config.profile} 
+        /* onSecretTrigger={() => setShow(true)} */
+      />
+      
       <Research researchDirs={config.researchDirs} />
       <Publications />
+      
       <footer className="py-20 bg-slate-950 text-slate-700 text-[10px] text-center uppercase tracking-[0.4em] font-black">
         <div className="max-w-5xl mx-auto px-6 border-t border-white/5 pt-16">
-           &copy; {new Date().getFullYear()} Min Wu Laboratory / West China Hospital
+          &copy; {new Date().getFullYear()} Min Wu Laboratory / West China Hospital
         </div>
       </footer>
-      <NobelModal isOpen={show} onClose={() => setShow(false)} />
+
+      {/* [彩蛋屏蔽] 9. 移除模态框渲染 */}
+      {/* <NobelModal isOpen={show} onClose={() => setShow(false)} /> */}
     </div>
   );
 }
