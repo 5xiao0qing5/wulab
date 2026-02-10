@@ -3,5 +3,5 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/wulab/', // 这里必须和你刚才创建的仓库名一致
+  base: '/', // 自定义域名部署使用根路径
 })
